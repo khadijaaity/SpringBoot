@@ -2,10 +2,10 @@ package com.netmind.demo.model;
 
 public class Employee {
 
-	Integer id;
-	String firstName;
-	String lastName;
-	String email;
+	private Integer id;
+	private String firstName;
+	private String lastName;
+	private String email;
 
 	public Integer getId() {
 		return id;

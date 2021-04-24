@@ -7,25 +7,34 @@ import com.netmind.demo.model.Employees;
 
 @Repository
 public class EmployeeDao {
-	private static Employees list = new Employees();
+
+	private static Employees employees = new Employees();
 
 	static {
-		list.getEmployeeList().add(
+		employees.getEmployeeList().add(
 				new Employee(1, "Lokesh", "Gupta", "howdoinjava@netmind.com"));
-		list.getEmployeeList()
+		employees.getEmployeeList()
 				.add(new Employee(2, "Alex", "Kolenchiskey", "abc@gmail.com"));
-		list.getEmployeeList()
+		employees.getEmployeeList()
 				.add(new Employee(3, "David", "Kameron", "titatic@gmail.com"));
-		list.getEmployeeList()
+		employees.getEmployeeList()
 				.add(new Employee(4, "Carmen", "Kameron", "mnc@gmail.com"));
 	}
 
 	public Employees getAllEmployees() {
-		return list;
+		return employees;
 	}
 
-	public void addEmployee(Employee employee) {
-		list.getEmployeeList().add(employee);
+	public Employee addEmployee(Employee employee) {
+		employees.getEmployeeList().add(employee);
+
+		// lamda expresion (->)
+		Employee employeeAdded = employees.getEmployeeList().stream()
+				.filter(employeeSearched -> employee.getId()
+						.equals(employeeSearched.getId()))
+				.findAny().orElse(null);
+
+		return employeeAdded;
 	}
 
 }
