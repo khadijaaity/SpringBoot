@@ -8,14 +8,31 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@ConfigurationProperties("com.netmind.app.database")
+@ConfigurationProperties("spring.datasource")
 public class DatabaseConfig {
 
-	private String url;
-	private String user;
-	private String password;
-
 	static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
+
+	private String url;
+	private String username;
+	private String password;
+	private String driverClassName;
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getDriverClassName() {
+		return driverClassName;
+	}
+
+	public void setDriverClassName(String driverClassName) {
+		this.driverClassName = driverClassName;
+	}
 
 	public String getUrl() {
 		return url;
@@ -23,14 +40,6 @@ public class DatabaseConfig {
 
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
 	}
 
 	public String getPassword() {
@@ -45,16 +54,19 @@ public class DatabaseConfig {
 	@Bean
 	public String devDatabaseConnection() {
 		logger.info(url);
-		logger.info(user);
+		logger.info(username);
 		logger.info(password);
+		logger.info(driverClassName);
 		return url;
 	}
 
 	@Profile("pro")
-	public String proDatabaseConnection() {
+	@Bean
+	public String prodDatabaseConnection() {
 		logger.info(url);
-		logger.info(user);
+		logger.info(username);
 		logger.info(password);
+		logger.info(driverClassName);
 		return url;
 	}
 }

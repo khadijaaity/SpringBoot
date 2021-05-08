@@ -1,5 +1,7 @@
 package com.netmind.demo.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,51 +16,44 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.netmind.demo.dao.EmployeeDao;
 import com.netmind.demo.model.Employee;
-import com.netmind.demo.model.EmployeeNotFoundException;
-import com.netmind.demo.model.Employees;
+import com.netmind.demo.service.EmployeeService;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/employee")
-public class EmployeeController {
+@RequestMapping("/employeeh2")
+public class EmployeeH2Controller {
 
 	@Autowired
-	private EmployeeDao employeeDao;
+	private EmployeeService employeeService;
 
 	@GetMapping(path = "/employees", produces = "application/json")
-	public ResponseEntity<Employees> getEmployees() {
-		return ResponseEntity.ok(employeeDao.getAllEmployees());
+	public ResponseEntity<List<Employee>> getEmployees() {
+		return ResponseEntity.ok(employeeService.getEmployees());
 	}
 
 	@PostMapping("/employees")
 	public ResponseEntity<Employee> createEmployee(
 			@Valid @RequestBody Employee employee) {
-		return ResponseEntity.ok(employeeDao.addEmployee(employee));
+		return ResponseEntity.ok(employeeService.createEmployee(employee));
 	}
 
 	@PutMapping("/employees/{id}")
 	public ResponseEntity<Employee> updateEmployee(@PathVariable Integer id,
 			@RequestBody Employee employee) {
-		employeeDao.updateEmployee(id, employee);
-		return ResponseEntity.ok(employeeDao.getEmployeeById(id));
+		Employee employeeFromDb = employeeService.getEmployeeById(id);
+
+		employeeFromDb.setFirstName(employee.getFirstName());
+		employeeFromDb.setLastName(employee.getLastName());
+		employeeFromDb.setEmail(employee.getEmail());
+
+		return ResponseEntity.ok(employeeService.createEmployee(employee));
 	}
 
 	@DeleteMapping("/employees/{id}")
 	public ResponseEntity<Void> deleteEmployee(@PathVariable Integer id) {
-		employeeDao.deleteEmployee(id);
+		employeeService.deleteEmployee(id);
 		return ResponseEntity.ok().build();
-	}
-
-	@GetMapping("/employees/{id}")
-	public ResponseEntity<Employee> getEmployeeById(@PathVariable Integer id) {
-		Employee employee = employeeDao.getEmployeeById(id);
-
-		if (employee == null)
-			throw new EmployeeNotFoundException("id-" + id);
-
-		return ResponseEntity.ok(employee);
 	}
 
 }
